@@ -1,7 +1,7 @@
 import { fetchMostPopularArticles } from "../../services/nytimesService";
 
 const API_KEY = process.env.REACT_APP_NYTIMES_API_KEY;
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_NYTIMES_BASE_URL;
 
 const mockFetch = (status, data) => {
   global.fetch = jest.fn(() =>
@@ -34,7 +34,7 @@ describe("fetchMostPopularArticles", () => {
     const articles = await fetchMostPopularArticles();
     expect(articles).toEqual(mockData.results);
     expect(global.fetch).toHaveBeenCalledWith(
-      `${BASE_URL}/1.json?api-key=${API_KEY}`
+      `${BASE_URL}/svc/mostpopular/v2/viewed/1.json?api-key=${API_KEY}`
     );
   });
 
@@ -45,7 +45,7 @@ describe("fetchMostPopularArticles", () => {
       "Network response was not ok"
     );
     expect(global.fetch).toHaveBeenCalledWith(
-      `${BASE_URL}/1.json?api-key=${API_KEY}`
+      `${BASE_URL}/svc/mostpopular/v2/viewed/1.json?api-key=${API_KEY}`
     );
   });
 
@@ -54,7 +54,7 @@ describe("fetchMostPopularArticles", () => {
 
     await expect(fetchMostPopularArticles()).rejects.toThrow("Network Error");
     expect(global.fetch).toHaveBeenCalledWith(
-      `${BASE_URL}/1.json?api-key=${API_KEY}`
+      `${BASE_URL}/svc/mostpopular/v2/viewed/1.json?api-key=${API_KEY}`
     );
   });
 });
