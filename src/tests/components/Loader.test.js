@@ -1,14 +1,23 @@
-import React from "react";
-import { render } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
-import Loader from "../../components/Loader";
+import React from 'react';
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import Loader from '../../components/Loader';
+import { MemoryRouter } from 'react-router';
 
-test("renders without crashing", () => {
-  const { container } = render(<Loader />);
-  expect(container).toBeInTheDocument();
+test('renders without crashing', () => {
+	const { container } = render(
+		<MemoryRouter>
+			<Loader />
+		</MemoryRouter>
+	);
+	expect(container).toBeInTheDocument();
 });
 
-test("matches snapshot", () => {
-  const { asFragment } = render(<Loader />);
-  expect(asFragment()).toMatchSnapshot();
+test('matches snapshot', () => {
+	const { asFragment } = render(
+		<MemoryRouter>
+			<Loader />
+		</MemoryRouter>
+	);
+	expect(asFragment()).toMatchSnapshot();
 });

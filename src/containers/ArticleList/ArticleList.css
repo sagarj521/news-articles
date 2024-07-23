@@ -15,6 +15,7 @@
   .article-link{
     text-decoration: none;
     color: #5A5A5A;
+    display: flex;
   }
   
   .article-item:hover {

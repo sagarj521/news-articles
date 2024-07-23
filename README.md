@@ -1,12 +1,55 @@
 # NY Times Most Popular Articles
 
-This project displays the most popular articles from the NY Times.
+This project displays the most popular articles from the NY Times. Users can view a list of the most popular articles and click on a link to see the details of each article and can redict to news article page.
 
-## Installation
+## Project Overview
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Create a `.env.local` file with your API key and api url: `REACT_APP_NYTIMES_API_KEY=your-api-key` and `REACT_APP_NYTIMES_BASE_URL=https://api.nytimes.com`
+This project is built using React.js it provide a responsive and user interface for displaying and interacting with the most popular articles from the NY Times. The project is structured to maintain a clear separation between presentation, logic, and services.
+
+## Folder Structure
+
+src
+|-- components
+│ |-- ArticleLink.js
+| |-- Loader.js
+│ |-- ArticleDetail.js
+|-- containers
+│ |-- ArticleList.js
+|-- services
+│ |-- nytimesService.js
+|-- tests
+| |-- Components
+| |--- app.test.js
+| |--- ArticleDetail.test.js
+| |--- ArticleLink.test.js
+| |--- ArticleList.test.js
+| |--- Loader.test.js
+|
+| |-- services
+│ |--- nytimesService.test.js
+|-- App.js
+|-- index.js
+|-- setupTests.js
+|-- index.css
+
+-   components: Contains presentational components that are purely UI-focused, such as LoaderComponent and ArticleDetailComponent.
+-   containers: Contains container components that manage state and handle logic, such as ArticleListComponent.
+-   services: Contains service files that handle API calls, such as nytimesService.js.
+-   tests: Contains unit test cases written using Jest and React Testing Library.
+
+## Technologies Used
+
+-   React.js: For building the user interface.
+-   Jest: For writing unit tests.
+-   React Testing Library: For testing React components.
+-   NY Times APIs: For fetching the most popular articles.
+
+## Installation and Setup
+
+1. Clone the repository: `https://github.com/sagarj521/news-articles.git`
+2. Navigate to the project directory: `cd news-articles`
+3. Install dependencies: `npm install`
+4. Create a `.env` file in the root of the project and add your API key and API url: `REACT_APP_NYTIMES_API_KEY=your-api-key` and `REACT_APP_NYTIMES_BASE_URL=https://api.nytimes.com`
 
 ## Running the Project
 

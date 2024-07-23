@@ -1,12 +1,11 @@
 //External Dependencies
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 //Internal dependencies
 import { fetchMostPopularArticles } from '../../services/nytimesService';
 import './ArticleList.css';
 import Loader from '../../components/Loader';
-import ArticleDetail from '../../components/ArticleDetail';
-
+import ArticleLink from '../../components/ArticleLink';
 /**
  * A component that fetches and displays the most popular articles from the New York Times.
  *
@@ -17,29 +16,41 @@ import ArticleDetail from '../../components/ArticleDetail';
  * )
  */
 const ArticleList = () => {
-	const [articles, setArticles] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
+	const [state, setState] = useState({
+		articles: [],
+		isLoading: true,
+		hasError: false
+	});
 
-	/**
-	 * useEffect hook to fetch articles on component mount.
-	 * and the state is updated accordingly.
-	 */
-	useEffect(() => {
-		const getArticles = async () => {
+	const getArticles = useCallback(async () => {
+		try {
 			const data = await fetchMostPopularArticles(1);
-			setIsLoading(false);
-			setArticles(data);
-		};
-		getArticles();
+			setState({ articles: data, isLoading: false, hasError: false });
+		} catch (error) {
+			console.error('Error fetching articles:', error);
+			setState({ articles: [], isLoading: false, hasError: true });
+		}
 	}, []);
+
+	useEffect(() => {
+		getArticles();
+	}, [getArticles]);
+
+	const { articles, isLoading, hasError } = state;
+
+	if (isLoading) {
+		return <Loader />;
+	}
+
+	if (hasError) {
+		return <p>Something went wrong. Please try again later.</p>;
+	}
 
 	return (
 		<ul className="article-list">
-			{isLoading ? (
-				<Loader />
-			) : (
-				articles.map((article) => <ArticleDetail key={article.id} article={article} />)
-			)}
+			{articles.map((article) => (
+				<ArticleLink key={article.id} article={article} />
+			))}
 		</ul>
 	);
 };

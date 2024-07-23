@@ -1,30 +1,52 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import './ArticleDetail.css';
+import { useLocation } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
-const ArticleDetail = ({ article }) => {
+const ArticleDetail = () => {
+	const navigate = useNavigate();
+	const { state } = useLocation();
+
+	const articleDetail = state && state.article ? JSON.parse(state?.article) : {};
+
 	return (
-		<li className="article-item">
-			{article.media && article.media[0] && article.media[0]['media-metadata'] ? (
-				<img
-					src={article.media[0]['media-metadata'][0].url}
-					alt={article.title}
-					className="article-thumbnail"
-				/>
-			) : (
-				<div className="no-image">No Image</div>
-			)}
-			<a className="article-link" href={article.url} target="_blank" rel="noreferrer">
-				<div className="article-info">
-					<h2>{article.title}</h2>
-					<p>{article.abstract}</p>
+		<React.Fragment>
+			<div className="news-container">
+				<button className="back-button" onClick={() => navigate(-1)}>
+					Back to Article List
+				</button>
+				<h2 className="news-title news-content">{articleDetail.title}</h2>
+				<div className="news-image">
+					{articleDetail.media &&
+					articleDetail.media[0] &&
+					articleDetail.media[0]['media-metadata'] ? (
+						<img
+							src={articleDetail.media[0]['media-metadata'][2].url}
+							alt={articleDetail.title}
+							className="article-thumbnail"
+						/>
+					) : (
+						<div className="no-image">No Image</div>
+					)}
 				</div>
-			</a>
-		</li>
+				<div className="news-content">
+					<p className="news-description">{articleDetail.abstract}</p>
+					<div className="news-footer">
+						<span className="news-date">Posted on: {articleDetail.published_date}</span>
+						<a
+							className="article-link"
+							href={articleDetail.url}
+							target="_blank"
+							rel="noreferrer"
+						>
+							View Details
+						</a>
+						<span className="news-source">Source: {articleDetail.source}</span>
+					</div>
+				</div>
+			</div>
+		</React.Fragment>
 	);
-};
-
-ArticleDetail.propTypes = {
-	article: PropTypes.object
 };
 
 export default ArticleDetail;

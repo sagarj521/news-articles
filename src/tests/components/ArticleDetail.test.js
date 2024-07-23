@@ -1,57 +1,88 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter, useLocation, useNavigate } from 'react-router-dom';
 import ArticleDetail from '../../components/ArticleDetail';
 
-// Mock article data
-const mockArticleWithImage = {
-	id: 1,
-	title: 'Sample Article',
-	abstract: 'This is a sample article',
-	url: 'http://example.com',
-	media: [
-		{
-			'media-metadata': [
-				{
-					url: 'http://example.com/sample.jpg'
-				}
-			]
-		}
-	]
-};
+// Mock the react-router-dom hooks
+jest.mock('react-router-dom', () => ({
+	...jest.requireActual('react-router-dom'),
+	useNavigate: jest.fn(),
+	useLocation: jest.fn()
+}));
 
-const mockArticleWithoutImage = {
-	id: 2,
-	title: 'Sample Article Without Image',
-	abstract: 'This is a sample article without an image',
-	url: 'http://example.com',
-	media: []
-};
+describe('ArticleDetail', () => {
+	const navigate = jest.fn();
 
-describe('ArticleDetail Component', () => {
-	test('renders with article data correctly', () => {
-		const { getByText } = render(<ArticleDetail article={mockArticleWithImage} />);
-		expect(getByText('Sample Article')).toBeInTheDocument();
-		expect(getByText('This is a sample article')).toBeInTheDocument();
+	const articleWithImage = {
+		title: 'Test Article',
+		abstract: 'This is a test abstract.',
+		media: [
+			{
+				'media-metadata': [{}, {}, { url: 'https://example.com/test-image.jpg' }]
+			}
+		],
+		published_date: '2024-07-23',
+		url: 'https://example.com/test-article',
+		source: 'Test Source'
+	};
+
+	const articleWithoutImage = {
+		title: 'Test Article',
+		abstract: 'This is a test abstract.',
+		media: [],
+		published_date: '2024-07-23',
+		url: 'https://example.com/test-article',
+		source: 'Test Source'
+	};
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+		useNavigate.mockReturnValue(navigate);
 	});
 
-	test('displays image if available', () => {
-		const { getByAltText } = render(<ArticleDetail article={mockArticleWithImage} />);
-		const img = getByAltText('Sample Article');
-		expect(img).toBeInTheDocument();
-		expect(img).toHaveAttribute('src', 'http://example.com/sample.jpg');
+	test('renders fallback when no image is available', () => {
+		useLocation.mockReturnValue({
+			state: { article: JSON.stringify(articleWithoutImage) }
+		});
+
+		render(
+			<MemoryRouter>
+				<ArticleDetail />
+			</MemoryRouter>
+		);
+
+		expect(screen.getByText('No Image')).toBeInTheDocument();
 	});
 
-	test('displays "No Image" if no image is available', () => {
-		const { getByText } = render(<ArticleDetail article={mockArticleWithoutImage} />);
-		expect(getByText('No Image')).toBeInTheDocument();
+	test('navigates back to article list on button click', () => {
+		useLocation.mockReturnValue({
+			state: { article: JSON.stringify(articleWithImage) }
+		});
+
+		render(
+			<MemoryRouter>
+				<ArticleDetail />
+			</MemoryRouter>
+		);
+
+		fireEvent.click(screen.getByText('Back to Article List'));
+		expect(navigate).toHaveBeenCalledWith(-1);
 	});
 
-	test('has working link with correct URL', () => {
-		const { getByRole } = render(<ArticleDetail article={mockArticleWithImage} />);
-		const link = getByRole('link', { name: /sample article/i });
+	test('renders view details link correctly', () => {
+		useLocation.mockReturnValue({
+			state: { article: JSON.stringify(articleWithImage) }
+		});
+
+		render(
+			<MemoryRouter>
+				<ArticleDetail />
+			</MemoryRouter>
+		);
+
+		const link = screen.getByText('View Details');
 		expect(link).toBeInTheDocument();
-		expect(link).toHaveAttribute('href', 'http://example.com');
 		expect(link).toHaveAttribute('target', '_blank');
+		expect(link).toHaveAttribute('rel', 'noreferrer');
 	});
 });
