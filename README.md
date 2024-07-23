@@ -32,6 +32,12 @@ Launches the test runner in the interactive watch mode.
 npm run coverage
 ```
 
+## Run lint
+
+```sh
+npm run lint
+```
+
 ## Build the app
 
 ```sh
