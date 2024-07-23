@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="App"
+  >
+    <h1>
+      NY Times Most Popular Articles
+    </h1>
+  </div>
+  <ul
+    class="article-list"
+  >
+    <div
+      class="loading"
+    />
+  </ul>
+</DocumentFragment>
+`;
