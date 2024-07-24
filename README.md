@@ -8,7 +8,7 @@ This project is built using React.js it provide a responsive and user interface 
 
 ## Folder Structure
 
-src
+```src
 |-- components
 │ |-- ArticleLink.js
 | |-- Loader.js
@@ -31,7 +31,7 @@ src
 |-- index.js
 |-- setupTests.js
 |-- index.css
-
+```
 -   components: Contains presentational components that are purely UI-focused, such as LoaderComponent and ArticleDetailComponent.
 -   containers: Contains container components that manage state and handle logic, such as ArticleListComponent.
 -   services: Contains service files that handle API calls, such as nytimesService.js.
