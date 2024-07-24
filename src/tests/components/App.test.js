@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from '../../App';
 
-// Mock the ArticleList and ArticleDetail components
 jest.mock('../../containers/ArticleList', () => {
 	const ArticleList = () => <div>Article List Component</div>;
 

@@ -1,29 +1,43 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import ArticleList from '../../containers/ArticleList';
+import '@testing-library/jest-dom/extend-expect';
 import { fetchMostPopularArticles } from '../../services/nytimesService';
+import ArticleList from '../../containers/ArticleList';
 import { MemoryRouter } from 'react-router';
 
 jest.mock('../../services/nytimesService');
 
-describe('ArticleLink', () => {
-	test('renders articles list', async () => {
+describe('ArticleList Component', () => {
+	it('should display the loader while fetching articles', () => {
+		fetchMostPopularArticles.mockResolvedValue([]);
+		render(
+			<MemoryRouter>
+				<ArticleList />
+			</MemoryRouter>
+		);
+		expect(screen.getByTestId('loader')).toBeInTheDocument();
+	});
+
+	it('should display an error message if fetching articles fails', async () => {
+		fetchMostPopularArticles.mockRejectedValue(new Error('Failed to fetch articles'));
+		render(
+			<MemoryRouter>
+				<ArticleList />
+			</MemoryRouter>
+		);
+		await waitFor(() =>
+			expect(
+				screen.getByText('Something went wrong. Please try again later.')
+			).toBeInTheDocument()
+		);
+	});
+
+	it('should display articles when fetching articles is successful', async () => {
 		const articles = [
-			{
-				id: 1,
-				title: 'Article 1',
-				abstract: 'Abstract 1',
-				url: 'https://example.com'
-			},
-			{
-				id: 2,
-				title: 'Article 2',
-				abstract: 'Abstract 2',
-				url: 'https://example.com'
-			}
+			{ id: 1, title: 'Article 1' },
+			{ id: 2, title: 'Article 2' }
 		];
 		fetchMostPopularArticles.mockResolvedValue(articles);
-
 		render(
 			<MemoryRouter>
 				<ArticleList />
@@ -31,9 +45,8 @@ describe('ArticleLink', () => {
 		);
 
 		await waitFor(() => {
-			articles.forEach((article) => {
-				expect(screen.getByText(article.title)).toBeInTheDocument();
-			});
+			expect(screen.getByText('Article 1')).toBeInTheDocument();
+			expect(screen.getByText('Article 2')).toBeInTheDocument();
 		});
 	});
 });
